@@ -13,6 +13,12 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    // Tambahkan relasi ini di dalam class User
+    public function peminjaman(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Peminjaman::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

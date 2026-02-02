@@ -1,22 +1,17 @@
 <footer class="content-footer footer bg-footer-theme">
-    <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-        <div class="mb-2 mb-md-0">
-            ©
+    <div class="container-xxl d-flex flex-wrap justify-content-between py-3 flex-md-row flex-column border-top">
+        <div class="mb-2 mb-md-0 text-muted">
+            <span class="fw-medium">INVAS</span> © 
             <script>
                 document.write(new Date().getFullYear());
-            </script>
-            , made with ❤️ by
-            <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+            </script> 
+            <span class="d-none d-sm-inline-block">| All Rights Reserved.</span>
         </div>
-        <div>
-            <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-            <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-            <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/" target="_blank"
-                class="footer-link me-4">Documentation</a>
-
-            <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank"
-                class="footer-link me-4">Support</a>
+        <div class="d-none d-lg-inline-block">
+            <a href="#" class="footer-link me-4">Bantuan</a>
+            <a href="#" class="footer-link me-4">Kebijakan Privasi</a>
+            <a href="#" class="footer-link me-4">Syarat & Ketentuan</a>
+            <span class="badge bg-label-primary px-3 py-2 rounded-pill">v1.0.0</span>
         </div>
     </div>
 </footer>
