@@ -3,78 +3,79 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan katalog produk.
      */
     public function index()
     {
-        $products = \App\Models\Product::with('category')->get();
+        $products = Product::with('category')->latest()->get();
+        $categories = Category::all();
 
-        return view('dashboard.products.index', compact('products'));
+        return view('dashboard.products.index', compact('products', 'categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan laporan stok.
      */
-    public function create()
+    public function stock()
     {
+        $products = Product::with('category')->orderBy('stock', 'asc')->get();
+
+        return view('dashboard.products.stock', compact('products'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan produk baru.
      */
-   // app/Http/Controllers/Dashboard/ProductController.php
-
-public function store(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'category_id' => 'required|exists:categories,id',
-        'name'        => 'required|string|max:255',
-        'price'       => 'required|numeric',
-        'stock'       => 'required|integer',
-    ]);
-
-    // Simpan data
-    \App\Models\Product::create([
-        'category_id' => $request->category_id,
-        'name'        => $request->name,
-        'price'       => $request->price,
-        'stock'       => $request->stock,
-    ]);
-
-    // Kembalikan ke halaman sebelumnya dengan pesan sukses
-    return redirect()->route('dashboard.products.index')->with('success', 'Produk berhasil ditambahkan!');
-}
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function store(Request $request)
     {
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric',
+        ]);
+
+        Product::create($validated);
+
+        return redirect()->route('dashboard.products.index')
+                         ->with('success', 'Produk berhasil ditambahkan');
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Memproses pembaruan data produk.
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
+
+        return redirect()->route('dashboard.products.index')
+                         ->with('success', 'Produk berhasil diperbarui');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus produk.
      */
     public function destroy(string $id)
     {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('dashboard.products.index')
+                         ->with('success', 'Produk berhasil dihapus');
     }
 }

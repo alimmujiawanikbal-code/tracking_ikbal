@@ -11,19 +11,23 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('barang', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_barang')->unique();
+            // Memastikan storage engine menggunakan InnoDB untuk mendukung foreign key
+            $table->engine = 'InnoDB'; 
+            
+            $table->id(); 
             $table->string('nama_barang');
-            $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
-            $table->foreignId('lokasi_id')->constrained('lokasi')->onDelete('cascade');
-            $table->enum('kondisi', ['baik', 'rusak_ringan', 'rusak_berat', 'hilang']);
-            $table->integer('jumlah');
-            $table->string('satuan');
-            $table->date('tanggal_beli');
-            $table->decimal('harga', 15, 2);
-            $table->text('deskripsi')->nullable();
-            $table->string('foto')->nullable();
+
+            // Kita gunakan kolom terpisah lalu definisikan foreign key secara manual
+            // agar lebih "aman" dari error sinkronisasi tipe data
+            $table->unsignedBigInteger('kategori_id');
+            $table->unsignedBigInteger('lokasi_id');
+
+            $table->integer('stok');
             $table->timestamps();
+
+            // Definisi relasi
+            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
+            $table->foreign('lokasi_id')->references('id')->on('lokasi')->onDelete('cascade');
         });
     }
 
@@ -32,6 +36,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        // Matikan pengecekan foreign key agar drop table lancar
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('barang');
+        Schema::enableForeignKeyConstraints();
     }
 };

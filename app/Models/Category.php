@@ -10,4 +10,10 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'slug'];
+
+    // Menghubungkan Kategori ke Produk
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

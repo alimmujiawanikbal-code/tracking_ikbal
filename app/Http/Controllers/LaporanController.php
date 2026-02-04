@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peminjaman;
+
 class LaporanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        // Kita buat data manual (dummy) dulu supaya tidak error kalau tabel masih kosong
-        $laporan = collect([
-            (object) [
-                'kode_peminjaman' => 'PMJ-001',
-                'nama_peminjam' => 'Ijat',
-                'tanggal_pinjam' => '2026-02-02',
-                'tanggal_kembali' => null,
-                'status' => 'dipinjam',
-            ],
-        ]);
+        // Mengambil data peminjaman terbaru
+        $laporan = Peminjaman::latest()->get();
 
         return view('laporan.index', compact('laporan'));
     }

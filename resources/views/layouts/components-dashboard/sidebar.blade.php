@@ -1,35 +1,24 @@
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme shadow-sm">
-    <div class="app-brand demo" style="height: 75px;">
-        <a href="{{ route('dashboard.index') }}" class="app-brand-link">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme shadow">
+    <div class="app-brand demo d-flex align-items-center justify-content-center py-4">
+        <a href="{{ route('dashboard.index') }}" class="app-brand-link gap-2">
             <span class="app-brand-logo demo">
-                <svg width="32" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="brandGradient">
-                            <stop stop-color="#696cff" offset="0%"></stop>
-                            <stop stop-color="#3033e6" offset="100%"></stop>
-                        </linearGradient>
-                    </defs>
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <path d="M13.7918,0.3583 L3.3978,7.4417 C0.5668,9.6940 -0.3797,12.4788 0.5579,15.7960 C3.1235,19.2293 7.6507,21.2172 7.6507,21.2172 L18.6345,21.2174 C19.3802,19.4678 13.7918,0.3583 13.7918,0.3583 Z" fill="url(#brandGradient)"></path>
-                        <path d="M5.4732,6.0045 C4.0532,8.2161 4.3633,10.0722 6.4035,11.5729 C10.8577,13.5094 15.5088,14.4330 18.6192,7.9842 C13.7918,0.3583 5.4732,6.0045 5.4732,6.0045 Z" fill="#696cff" opacity="0.5"></path>
-                    </g>
+                <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.7,0.1 L13.7,0.1 C14.3,-0.0 14.9,0.1 15.4,0.5 L24.2,7.4 C25.0,8.1 25.2,9.2 24.6,10.0 L14.9,23.5 L13.7,23.5 L13.7,0.1 Z" fill="#696cff" />
+                    <path d="M11.3,0.1 L11.3,0.1 C10.7,-0.0 10.1,0.1 9.6,0.5 L0.8,7.4 C-0.0,8.1 -0.2,9.2 0.4,10.0 L10.1,23.5 L11.3,23.5 L11.3,0.1 Z" fill="#696cff" opacity="0.5" />
                 </svg>
             </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2" style="font-size: 1.5rem; letter-spacing: 1px;">Sneat</span>
-        </a>
-
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2 text-uppercase" style="letter-spacing: 2px;">Sneat</span>
         </a>
     </div>
 
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-3">
+        {{-- Dashboard --}}
         <li class="menu-item {{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
             <a href="{{ route('dashboard.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-dashboard"></i>
-                <div class="fw-medium">Dashboard</div>
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div>Dashboard</div>
             </a>
         </li>
 
@@ -37,52 +26,53 @@
             <span class="menu-header-text">Manajemen Internal</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('dashboard.users.*') ? 'active' : '' }}">
-            <a href="{{ route('dashboard.users.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-user-badge"></i>
-                <div class="fw-medium">Users Management</div>
+        {{-- User Management --}}
+        <li class="menu-item">
+            <a href="{{ route('dashboard.users.index') }}" class="menu-link text-muted">
+                <i class="menu-icon tf-icons bx bx-user-check"></i>
+                <div>User Management</div>
             </a>
         </li>
 
-        <li class="menu-item {{ (request()->is('dashboard/products*') || request()->is('dashboard/categories*')) ? 'active open' : '' }}">
+        {{-- Inventory System --}}
+        <li class="menu-item {{ request()->is('kategori*') || request()->is('barang*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bxs-layer"></i>
-                <div class="fw-medium">Inventory System</div>
+                <i class="menu-icon tf-icons bx bx-package"></i>
+                <div>Inventory System</div>
             </a>
-         <ul class="menu-sub">
-        <li class="menu-item {{ request()->routeIs('dashboard.categories.*') ? 'active' : '' }}">
-            <a href="{{ route('dashboard.categories.index') }}" class="menu-link">
-                 <div>Categories</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('dashboard.products.*') ? 'active' : '' }}">
-            <a href="{{ route('dashboard.products.index') }}" class="menu-link">
-                <div>Product Catalog</div>
-            </a>
-         </li>
-</ul>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('dashboard.categories.index') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.categories.index') }}" class="menu-link">
+                        <div>Categories</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
+                    <a href="{{ route('barang.index') }}" class="menu-link">
+                        <div>Product Catalog</div>
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Laporan & Pengaturan</span>
+            <span class="menu-header-text">Laporan</span>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-pie-chart-alt-2"></i>
-                <div class="fw-medium">Sales Report</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-cog"></i>
-                <div class="fw-medium">Settings</div>
+            <a href="{{ route('laporan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bar-chart-square"></i>
+                <div>Reports</div>
             </a>
         </li>
     </ul>
 
-    <div class="p-3 mt-auto border-top">
-        <a href="/logout" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center">
-            <i class="bx bx-log-out-circle me-2"></i> Logout
-        </a>
+    {{-- Logout --}}
+    <div class="p-3 border-top mt-auto">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-label-danger btn-sm w-100 d-flex align-items-center justify-content-center">
+                <i class="bx bx-power-off me-2"></i>
+                <span>Logout System</span>
+            </button>
+        </form>
     </div>
 </aside>

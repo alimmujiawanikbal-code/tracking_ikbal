@@ -11,18 +11,44 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::latest()->get();
 
         return view('dashboard.categories.index', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
         ]);
 
-        return back()->with('success', 'Kategori berhasil ditambah!');
+        Category::create([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+        ]);
+
+        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
+        ]);
+
+        $category->update([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+        ]);
+
+        return redirect()->back()->with('success', 'Kategori berhasil diperbarui!');
+    }
+
+    public function destroy(Category $category)
+    {
+        // Pastikan relasi di model sudah ada jika ingin mencegah hapus kategori yang punya produk
+        $category->delete();
+
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus!');
     }
 }

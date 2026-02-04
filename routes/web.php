@@ -1,31 +1,59 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// // --- Rute Register Manual (Taruh di Sini) ---
-// Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-// Route::post('/register', [RegisterController::class, 'register']);
-
-// Rute Auth Bawaan (Login, Logout, Reset Password)
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', function () { return view('welcome'); });
 
-// Dashboard routes
-Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
-    Route::get('/', [App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('index');
-    Route::resource('users', App\Http\Controllers\Dashboard\UserController::class);
+Route::middleware('auth')->group(function () {
+    // REDIRECT /home ke katalog agar tidak bingung
+    Route::get('/home', [InventoryController::class, 'index'])->name('home');
 
-    // Tambahkan dua baris ini
-    Route::resource('categories', App\Http\Controllers\Dashboard\CategoryController::class);
-    Route::resource('products', App\Http\Controllers\Dashboard\ProductController::class);
+    // --- GRUP ADMIN (Hanya bisa diakses admin) ---
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+        // Manajemen User
+        Route::get('/users', [UserController::class, 'index'])->name('dashboard.users.index');
+
+        // Inventory System (Barang, Kategori, Lokasi)
+        Route::get('/barang', [InventoryController::class, 'index'])->name('dashboard.products.index');
+        Route::get('/barang/tambah', [InventoryController::class, 'create'])->name('dashboard.barang.create');
+        Route::post('/barang/simpan', [InventoryController::class, 'store'])->name('dashboard.barang.store');
+
+        Route::get('/kategori', [InventoryController::class, 'indexCategory'])->name('dashboard.categories.index');
+
+        Route::get('/lokasi/tambah', [InventoryController::class, 'createLocation'])->name('lokasi.create');
+        Route::post('/lokasi/simpan', [InventoryController::class, 'storeLocation'])->name('lokasi.store');
+    });
+
+    // --- FITUR UMUM / PETUGAS ---
+    Route::get('/peminjaman', [LoanController::class, 'index'])->name('peminjaman.index');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/panduan', function () { return view('panduan'); })->name('panduan');
 });
-// laporan
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+// Inventory System (Barang, Kategori, Lokasi)
+Route::get('/barang', [InventoryController::class, 'index'])->name('dashboard.products.index');
+Route::get('/barang/tambah', [InventoryController::class, 'create'])->name('dashboard.barang.create');
+Route::post('/barang/simpan', [InventoryController::class, 'store'])->name('dashboard.barang.store');
+
+// FITUR KATEGORI LENGKAP
+Route::get('/kategori', [InventoryController::class, 'indexCategory'])->name('dashboard.categories.index');
+Route::get('/kategori/tambah', [InventoryController::class, 'createCategory'])->name('dashboard.categories.create');
+Route::post('/kategori/simpan', [InventoryController::class, 'storeCategory'])->name('dashboard.categories.store');
+use App\Http\Controllers\BarangController;
+
+// ... route lainnya ...
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Ini yang mendefinisikan route barang.index, barang.create, dll.
+    Route::resource('barang', BarangController::class);
+});
+Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');

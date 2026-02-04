@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Lokasi extends Model
 {
+    // Paksa nama tabel karena database kamu menggunakan 'lokasi' (bukan 'lokasis')
     protected $table = 'lokasi';
-    protected $fillable = ['nama', 'deskripsi'];
 
-    public function barang(): HasMany
+    // Daftarkan kolom 'nama' agar bisa diisi
+    protected $fillable = ['nama'];
+
+    public function barangs()
     {
-        return $this->hasMany(Barang::class);
+        return $this->hasMany(Barang::class, 'lokasi_id');
     }
 }
